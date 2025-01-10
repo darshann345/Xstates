@@ -12,16 +12,17 @@ export default function App() {
   useEffect(() => {
     const getCountryData = async () => {
       try {
-        const response = await fetch(`https://crio-location-selector.onrender.com/countries`);
+        const response = await fetch(
+          `https://crio-location-selector.onrender.com/countries`
+        );
         const data = await response.json();
         setCountries(data);
       } catch (error) {
-        console.error('Error: Failed to fetch Countries data', error);
+        console.error('Error Failed to fetch Countries data', error);
       }
     };
     getCountryData();
   }, []);
-
   const handleCountryChange = async (event) => {
     const country = event.target.value;
     setSelectedCountry(country);
@@ -29,70 +30,88 @@ export default function App() {
     setSelectedCity('');
     if (country) {
       try {
-        const response = await fetch(`https://crio-location-selector.onrender.com/country/${country}/states`);
+        const response = await fetch(
+          `https://crio-location-selector.onrender.com/country=${country}/states`
+        );
         const data = await response.json();
+        console.log(data);
         setStates(data);
       } catch (error) {
-        console.error('Error: Failed to fetch States', error);
+        console.error('Error Failed States', error);
       }
     } else {
       setStates([]);
     }
   };
-
   const handleStateChange = async (event) => {
     const state = event.target.value;
     setSelectedState(state);
     setSelectedCity('');
     if (state) {
       try {
-        const response = await fetch(`https://crio-location-selector.onrender.com/country/${selectedCountry}/state/${state}/cities`);
+        const response = await fetch(
+          ` https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${state}/cities`
+        );
         const data = await response.json();
         setCities(data);
       } catch (error) {
-        console.error('Error: Failed to fetch Cities', error);
+        console.log('Error failed cities', error);
       }
     } else {
       setCities([]);
     }
   };
-
   const handleCityChange = (event) => {
     setSelectedCity(event.target.value);
   };
-
   return (
     <div>
       <h1 style={{ display: 'flex', justifyContent: 'center' }}>
         Select Location
       </h1>
-      <div style={{ display: 'flex', justifyContent: 'space-around', gap: '20px' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'space-around', gap: '20px' }}
+      >
         <select value={selectedCountry} onChange={handleCountryChange}>
           <option value="">Select Country</option>
-          {countries.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
+          {countries.map((country) => {
+            return (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            );
+          })}
         </select>
-        <select value={selectedState} onChange={handleStateChange} disabled={states.length === 0}>
+        <select
+          value={selectedState}
+          onChange={handleStateChange}
+          disabled={states.length === 0}
+        >
           <option value="">Select State</option>
-          {states.map((state) => (
-            <option key={state} value={state}>
-              {state}
-            </option>
-          ))}
+          {states.map((state) => {
+            return (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            );
+          })}
         </select>
-        <select value={selectedCity} onChange={handleCityChange} disabled={cities.length === 0}>
+        <select
+          value={selectedCity}
+          onChange={handleCityChange}
+          disabled={cities.lengt === 0}
+        >
           <option value="">Select City</option>
-          {cities.map((city) => (
-            <option key={city} value={city}>
-              {city}
-            </option>
-          ))}
+          {cities.map((city) => {
+            return (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            );
+          })}
         </select>
       </div>
-      {selectedCity && (
+      {selectedCity ? (
         <p>
           <b>
             You selected <span style={{ fontSize: 20 }}>{selectedCity}</span>,{' '}
@@ -101,6 +120,8 @@ export default function App() {
             </span>
           </b>
         </p>
+      ) : (
+        <></>
       )}
     </div>
   );
